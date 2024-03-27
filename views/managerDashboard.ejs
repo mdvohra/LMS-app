@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<%- include('partials/_head.ejs') %>
+<body>
+<%- include('partials/_header.ejs') %>
+<main role="main" class="container mt-4">
+    <h2>Manager's Dashboard</h2>
+    <% if (leaveApplications && leaveApplications.length > 0) { %>
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Employee Name</th>
+                <th>Type of Leave</th>
+                <th>Start Date</th>
+                <th>End Date</th>
+                <th>Reason</th>
+                <th>Status</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <% leaveApplications.forEach(function(application) { %>
+                <tr>
+                    <td><%= application.userId.username %></td>
+                    <td><%= application.leaveType %></td>
+                    <td><%= new Date(application.startDate).toLocaleDateString() %></td>
+                    <td><%= new Date(application.endDate).toLocaleDateString() %></td>
+                    <td><%= application.reason %></td>
+                    <td><%= application.status %></td>
+                    <td>
+                        <form action="/approve-leave/<%= application._id %>" method="post" style="display:inline-block;">
+                            <div class="mb-3">
+                              <label for="approve-remarks-<%= application._id %>" class="form-label">Manager Remarks:</label>
+                              <textarea id="approve-remarks-<%= application._id %>" name="remarks" class="form-control" rows="2" placeholder="Enter remarks here..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-success btn-sm">Approve</button>
+                        </form>
+                        <form action="/reject-leave/<%= application._id %>" method="post" style="display:inline-block;">
+                            <div class="mb-3">
+                              <label for="reject-remarks-<%= application._id %>" class="form-label">Manager Remarks:</label>
+                              <textarea id="reject-remarks-<%= application._id %>" name="remarks" class="form-control" rows="2" placeholder="Enter remarks here..."></textarea>
+                            </div>
+                            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
+                        </form>
+                    </td>
+                </tr>
+            <% }); %>
+        </tbody>
+    </table>
+    <% } else { %>
+        <p>No leave applications found.</p>
+    <% } %>
+</main>
+<%- include('partials/_footer.ejs') %>
+</body>
+</html>
